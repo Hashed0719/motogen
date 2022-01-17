@@ -1,5 +1,6 @@
 import os
 import dotenv
+from discord import __version__
 from discord.ext import commands
 from discord.flags import Intents
 import logging 
@@ -47,6 +48,8 @@ bot.load_extension("CogsFolder.RedditCommandCog")
 
 # music chache deleter
 keep_clutter_out()
+# version
+print(__version__)
 # run 
 bot.run(token) 
 
