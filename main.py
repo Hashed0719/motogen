@@ -1,8 +1,8 @@
 import os
+import dotenv
 from discord.ext import commands
 from discord.flags import Intents
 import logging 
-from alive import keep_alive
 from deleter import keep_clutter_out
 from alive import countrun
 # import discord
@@ -18,6 +18,7 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 logger.addHandler(handler)
 
 #enviorenment variables
+dotenv.load_dotenv()
 token = os.environ['token']
 
 # bot initiate and Intents
@@ -43,8 +44,7 @@ bot.load_extension("CogsFolder.MusicCog")
 bot.load_extension("CogsFolder.RedditCommandCog")   
 
 
-# keeping alive
-keep_alive()
+
 # music chache deleter
 keep_clutter_out()
 # run 

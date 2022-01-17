@@ -2,6 +2,7 @@ import asyncio
 import discord
 import youtube_dl
 from discord.ext import commands
+from concurrent.futures import ProcessPoolExecutor as PPE
 
 # Suppress noise about console usage from errors
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -53,7 +54,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
 class Music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
+     
     @commands.command()
     async def join(self, ctx, *, channel: discord.VoiceChannel):
         """Joins a voice channel"""
@@ -62,6 +63,17 @@ class Music(commands.Cog):
             return await ctx.voice_client.move_to(channel)
 
         await channel.connect()
+    
+    @commands.command(name="play")
+    async def play(self, ctx, *, url):
+        """Streams from a url (same as yt, but doesn't predownload)"""
+
+        async with ctx.typing():
+            player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
+            ctx.voice_client.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
+
+        await ctx.send('Now playing: {}'.format(player.title))
+
 
     @commands.command(name="playlocal")
     async def playlocal(self, ctx, *, query):
@@ -78,16 +90,6 @@ class Music(commands.Cog):
 
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.bot.loop)
-            ctx.voice_client.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
-
-        await ctx.send('Now playing: {}'.format(player.title))
-
-    @commands.command(name="play")
-    async def play(self, ctx, *, url):
-        """Streams from a url (same as yt, but doesn't predownload)"""
-
-        async with ctx.typing():
-            player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
             ctx.voice_client.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
 
         await ctx.send('Now playing: {}'.format(player.title))

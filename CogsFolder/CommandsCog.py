@@ -2,11 +2,15 @@ from discord.ext import commands
 import discord
 import requests
 import os 
+import psutil
 
 class GeneralCommands(commands.Cog):
     def __init__(self,bot: commands.Bot):
         self.bot = bot
 
+    @commands.command(name="cpu_percent")
+    async def cpu_percent(self,ctx):
+        await ctx.channel.send(psutil.cpu_percent())
     @commands.command(name='ping')
     async def ping(self,ctx: commands.Context):
         if ctx.author.id == self.bot.user.id:
