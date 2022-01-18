@@ -38,11 +38,14 @@ async def on_ready():
     
     countrun("countrun.txt")
 
+    bot.load_extension("CogsFolder.Music")
+
 
 # importing cogs (def setup is needed as global function to import through bot.loadextension())
 bot.load_extension("CogsFolder.CommandsCog")
-bot.load_extension("CogsFolder.MusicCog")
+# bot.load_extension("CogsFolder.MusicCog")
 bot.load_extension("CogsFolder.RedditCommandCog")   
+
 
 
 
