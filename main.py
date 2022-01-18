@@ -6,6 +6,7 @@ from discord.flags import Intents
 import logging 
 from deleter import keep_clutter_out
 from alive import countrun
+import sys
 # import discord
 # from discord.client import Client
 # from dotenv import load_dotenv
@@ -34,7 +35,7 @@ bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"),intents=intent
 async def on_ready():
     bot_channel = bot.get_channel(id=931029261203152956)
     await bot_channel.send('alive!!!!')
-    print(f'connected as {bot.user}')
+    sys.stdout.write(f'connected as {bot.user}\n')
     
     countrun("countrun.txt")
 
@@ -52,7 +53,7 @@ bot.load_extension("CogsFolder.RedditCommandCog")
 # music chache deleter
 keep_clutter_out()
 # version
-print(__version__)
+sys.stdout.write(__version__+"\n")
 # run 
 bot.run(token) 
 

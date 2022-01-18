@@ -1,6 +1,6 @@
 from flask import Flask
 from threading import Thread
-
+from sys import stdout as sys
 app = Flask('')
 
 @app.route('/')
@@ -19,7 +19,7 @@ def countrun(filename):
     count = f.read()
     count = int(count)
     count += 1
-    print(instance_count:=f"{count}")
+    sys.write(instance_count:=f"{count}")
   f.close()
 
   with open(filename,'w') as f:
