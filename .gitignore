@@ -1,4 +1,5 @@
 .env
-countrun.txt
 __pycache__
 motogen.log
+countrun.txt
+logs/

@@ -5,7 +5,7 @@ from discord.ext import commands
 from discord.flags import Intents
 import logging 
 from deleter import keep_clutter_out
-from alive import countrun
+from alive import countrun,keep_alive
 import sys
 # import discord
 # from discord.client import Client
@@ -39,18 +39,18 @@ async def on_ready():
     
     countrun("countrun.txt")
 
+    # importing cogs (def setup is needed as global function to import through bot.loadextension())
+    bot.load_extension("CogsFolder.CommandsCog")
+    bot.load_extension("CogsFolder.RedditCommandCog")   
     bot.load_extension("CogsFolder.Music")
-
-
-# importing cogs (def setup is needed as global function to import through bot.loadextension())
-bot.load_extension("CogsFolder.CommandsCog")
-# bot.load_extension("CogsFolder.MusicCog")
-bot.load_extension("CogsFolder.RedditCommandCog")   
+    # bot.load_extension("CogsFolder.MusicCog")
 
 
 
 
-# music chache deleter
+
+keep_alive()
+# music clutter deleter
 keep_clutter_out()
 # version
 sys.stdout.write(__version__+"\n")

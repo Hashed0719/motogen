@@ -1,3 +1,4 @@
+from LavalinkServer import start_LavalinkServer
 from flask import Flask
 from threading import Thread
 from sys import stdout as sys
@@ -12,7 +13,9 @@ def run():
 
 def keep_alive():
     t = Thread(target=run)
+    t2 = Thread(target=start_LavalinkServer)
     t.start()
+    t2.start()
 
 def countrun(filename):
   with open(filename,'r') as f:
