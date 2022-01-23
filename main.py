@@ -4,7 +4,6 @@ from discord import __version__
 from discord.ext import commands
 from discord.flags import Intents
 import logging 
-from deleter import keep_clutter_out
 from alive import countrun,keep_alive
 import sys
 # import discord
@@ -50,8 +49,7 @@ async def on_ready():
 
 
 keep_alive()
-# music clutter deleter
-keep_clutter_out()
+
 # version
 sys.stdout.write(__version__+"\n")
 # run 
