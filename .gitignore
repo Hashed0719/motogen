@@ -1,5 +1,7 @@
 .env
+.idea/
 __pycache__
 motogen.log
 countrun.txt
 logs/
+venv/

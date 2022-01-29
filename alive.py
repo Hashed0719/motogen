@@ -2,6 +2,8 @@ from LavalinkServer import start_LavalinkServer
 from flask import Flask
 from threading import Thread
 from sys import stdout as sys
+
+
 app = Flask('')
 
 @app.route('/')

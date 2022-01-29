@@ -10,6 +10,8 @@ import re
 import discord
 import lavalink
 from discord.ext import commands
+from discord.ext.commands import Context
+from discord.ui import Button, View
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
 
@@ -34,7 +36,7 @@ class LavalinkVoiceClient(discord.VoiceClient):
                     'localhost',
                     2333,
                     'youshallnotpass',
-                    'us',
+                    'in',
                     'default-node')
             self.lavalink = self.client.lavalink
 
@@ -212,7 +214,11 @@ class Music(commands.Cog):
             track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
             player.add(requester=ctx.author.id, track=track)
 
-        await ctx.send(embed=embed)
+            button = Button(style=discord.ButtonStyle.red, label="disconnect")
+            view = View(button, timeout=60*5)
+            button.callback =  self.disconnect
+
+        await ctx.send(embed=embed,view=view)
 
         # We don't want to call .play() if the player is playing as that will effectively skip
         # the current track.
@@ -220,18 +226,18 @@ class Music(commands.Cog):
             await player.play()
 
     @commands.command(aliases=['dc'])
-    async def disconnect(self, ctx):
+    async def disconnect(self, ctx: Context):
         """ Disconnects the player from the voice channel and clears its queue. """
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
 
         if not player.is_connected:
             # We can't disconnect, if we're not connected.
-            return await ctx.send('Not connected.')
+            return await ctx.channel.send('Not connected.')
 
-        if not ctx.author.voice or (player.is_connected and ctx.author.voice.channel.id != int(player.channel_id)):
+        if not ctx.message.author.voice or (player.is_connected and ctx.message.author.voice.channel.id != int(player.channel_id)):
             # Abuse prevention. Users not in voice channels, or not in the same voice channel as the bot
             # may not disconnect the bot.
-            return await ctx.send('You\'re not in my voicechannel!')
+            return await ctx.channel.send('You\'re not in my voicechannel!')
 
         # Clear the queue to ensure old tracks don't start playing
         # when someone else queues something.
@@ -239,8 +245,9 @@ class Music(commands.Cog):
         # Stop the current track so Lavalink consumes less resources.
         await player.stop()
         # Disconnect from the voice channel.
-        await ctx.voice_client.disconnect(force=True)
-        await ctx.send('*⃣ | Disconnected.')
+        await ctx.guild.voice_client.disconnect(force=True)
+        # async with ctx.typing():
+        await ctx.channel.send('*⃣ | Disconnected.')
 
 
 def setup(bot):
